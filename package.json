@@ -1,0 +1,27 @@
+{
+  "name": "auth-backend",
+  "version": "1.0.0",
+  "description": "JWT backend auth with Fastify",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Prasad Zore",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.8.0",
+    "fastify": "^3.25.3",
+    "fastify-autoload": "^3.10.0",
+    "fastify-cors": "^6.0.2",
+    "fastify-plugin": "^3.0.0",
+    "fastify-sensible": "^3.1.2",
+    "fastify-swagger": "^4.13.1",
+    "prisma": "^3.8.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
