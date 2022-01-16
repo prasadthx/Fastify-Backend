@@ -5,7 +5,7 @@
   "description": "Fastify API",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node --es-module-specifier-resolution=node app.js",
     "dev": "nodemon --es-module-specifier-resolution=node app.js"
   },
   "author": "Prasad Zore",
