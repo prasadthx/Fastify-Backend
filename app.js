@@ -23,10 +23,6 @@ fastify.register(Autoload, {
     dir: join(__dirname, "routes")
 })
 
-fastify.get("/", async function (request, reply){
-    return {"Status" : "Working"};
-})
-
 // const runServer = async () => {
 //     try {
 //         await fastify.listen(PORT)
