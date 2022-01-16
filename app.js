@@ -15,12 +15,16 @@ const fastify = Fastify({
     logger: false
 })
 
-fastify.register(Autoload, {
-    dir: join(__dirname, "plugins")
-})
+// fastify.register(Autoload, {
+//     dir: join(__dirname, "plugins")
+// })
 
-fastify.register(Autoload, {
-    dir: join(__dirname, "routes")
+// fastify.register(Autoload, {
+//     dir: join(__dirname, "routes")
+// })
+
+fastify.get("/", async function (request, reply){
+    return {"Status" : "Working"};
 })
 
 const runServer = async () => {
