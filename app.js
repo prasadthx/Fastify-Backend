@@ -27,10 +27,19 @@ fastify.get("/", async function (request, reply){
     return {"Status" : "Working"};
 })
 
-fastify.listen(PORT, '0.0.0.0')
-.then((address) => console.log(`Server listening on ${address}`))
-.catch(err => {
-    console.log('Error starting server:', err)
-    process.exit(1)
-})
+// const runServer = async () => {
+//     try {
+//         await fastify.listen(PORT)
+//         console.log("App running on PORT: " + PORT);
+//     } catch (err) {
+//         fastify.log.error(err)
+//         process.exit(1)
+//     }
+// }
 
+fastify.listen(PORT, '0.0.0.0', (err) => {
+    if (err) {
+      app.log.error(err)
+      process.exit(1)
+    }
+})
