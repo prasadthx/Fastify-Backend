@@ -1,4 +1,4 @@
-import {createPlace, updatePlace, deletePlace, getPlace, getPlacesWithin, uploadPhotos, getPlacesByVendor} from '../../controllers/PlacesController'
+import {createPlace, updatePlace, deletePlace, getPlace, getPlacesWithin, uploadPhotos, getPhotos,getPlacesByVendor} from '../../controllers/PlacesController'
 
 export default async function placeRoutes ( fastify, opts ){
     
@@ -44,9 +44,18 @@ export default async function placeRoutes ( fastify, opts ){
 
     fastify.post( '/uploadphotos/:id', 
         {
+            preHandler: fastify.multer.parser.array('upload'),
             preValidation: [fastify.authenticate]
         },
         async function (request, reply){
             return await uploadPhotos( request, reply);
+    })
+
+    fastify.get( '/getphotos/:id', 
+        {
+            preValidation: [fastify.authenticate]
+        },
+        async function (request, reply){
+            return await getPhotos( request, reply);
     })
 }

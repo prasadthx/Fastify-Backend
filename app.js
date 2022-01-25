@@ -26,7 +26,7 @@ fastify.register(Autoload, {
     dir: join(__dirname, "routes")
 })
 
-fastify.listen(PORT)
+fastify.listen(PORT,'0.0.0.0')
 .then(
     (address) => {
         mongoose.connect(DB_URL).then(
@@ -47,10 +47,3 @@ fastify.listen(PORT)
 )
 
 
-
-// fastify.listen(PORT, '0.0.0.0', (err) => {
-//     if (err) {
-//       app.log.error(err)
-//       process.exit(1)
-//     }
-// })

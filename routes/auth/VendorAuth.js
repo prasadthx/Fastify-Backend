@@ -47,7 +47,8 @@ export default async function authRoutes ( fastify, opts ){
     
     fastify.post("/vendor/uploadphoto",
     {
-      preValidation: [fastify.authenticate]
+      preHandler: fastify.multer.parser.single('upload'),
+      preValidation: [fastify.authenticate],
     }, 
     async function (request, reply){
         return await uploadProfilePhoto(request, reply);

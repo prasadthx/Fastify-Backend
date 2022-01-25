@@ -1,5 +1,6 @@
 import Vendor from '../models/Vendor';
 import Place from '../models/Place';
+import Image from '../models/Image';
 
 export const createPlace = async (req, res) => {
     let vendor = req.user;
@@ -94,16 +95,21 @@ export const uploadPhotos = async (req, res) => {
     if(!place || place.vendor.email !== vendor.email) {
         res.status(400).send({ error: "Not authorized" });
     }
-    const parts = req.parts()
-    let photos = [];
-    for await (const part of parts) {
-        if (part.file) {
-            photos.push(await part.toBuffer());
-        } else {
-        console.log(part)
-        }
+    let images = [];
+    for (let file of req.files){
+        let image = new Image({
+            filename: file.filename,
+            originalname: file.originalname,
+            url: file.path
+        });
+        image = await image.save();
+        images.push(image);
     }
-    place.photos = photos;
+    place.photos = images;
     place.save();
-    res.code(200).send({success : "Photo uploaded"});
+    res.code(200).send({success : "Photos uploaded"});
+}
+
+export const getPhotos = async (req, res) => {
+
 }

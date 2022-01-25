@@ -1,5 +1,6 @@
 import { compare, genSaltSync, hash } from 'bcrypt'
 import Vendor from '../models/Vendor';
+import Image from '../models/Image';
 
 export const signUp = async (req, res) => {
     try {
@@ -77,13 +78,12 @@ export const uploadProfilePhoto = async (req, res) => {
   if(!vendor) {
     return res.status(401).send({ error: 'Invalid Token' })
   }
-  let data = await req.file();
-  console.log(data.file);
-  if(data.mimetype.split("/")[0] !== 'image'){
-    return res.status(401).send({ error: 'Invalid File, upload only Image' })
-  }
-  data = await data.toBuffer();
-  // console.log(data);
+  const image = new Image({
+    filename: req.file.filename,
+    originalname: req.file.originalname,
+    url: req.file.path
+  });
+  const data = await image.save();
   vendor.photo = data;
   await vendor.save();
   res.code(200).send({success : "Photo uploaded"});

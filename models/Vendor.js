@@ -25,7 +25,8 @@ export const vendorSchema = mongoose.Schema({
         immutable: true
     },
     photo : {
-        type: Buffer,
+        type: mongoose.Types.ObjectId,
+        ref: 'Image'
     },
     verified : Boolean,
     phoneNumber : String

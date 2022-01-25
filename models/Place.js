@@ -11,9 +11,10 @@ const placeSchema = mongoose.Schema({
         ref: "Vendor", 
         required: true
     },
-    photos : { 
-        type : [Buffer]
-    },
+    photos :[{
+        type: mongoose.Types.ObjectId,
+        ref: 'Image'
+    }],
     categories : {
         type : [String],
         enum : ['venue', 'food', 'lookups', 'music/dj']
