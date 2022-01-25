@@ -111,5 +111,18 @@ export const uploadPhotos = async (req, res) => {
 }
 
 export const getPhotos = async (req, res) => {
-
+    const vendor = await Vendor.findOne({ email: req.user.data.email });
+    if(!vendor) {
+        return res.status(401).send({ error: 'Invalid Token' })
+    }
+    const place = await Place.findOne({_id : req.params.id}).populate("vendor")
+    if(!place || place.vendor.email !== vendor.email) {
+        res.status(400).send({ error: "Not authorized" });
+    }
+    let photos = [];
+    for(let photo of place.photos) {
+        let image = await Image.findOne({_id:photo})
+        photos.push(image);
+    }
+    res.code(200).send({photos});
 }
