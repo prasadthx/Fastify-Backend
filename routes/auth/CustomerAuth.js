@@ -1,4 +1,4 @@
-import { signUp, login } from '../controllers/authController'
+import { signUp, login, verifyCustomerEmail } from '../../controllers/CustomerController'
 
 const signUpSchema = {
   type: 'object',
@@ -29,15 +29,23 @@ const loginOpts = {
 
 export default async function authRoutes ( fastify, opts ){
 
-    fastify.post("/signup", {schema : signUpOpts}, async function (request, reply){
-        return await signUp(fastify.prisma, request, reply)  
+    fastify.post("/customer/signup", {schema : signUpOpts}, async function (request, reply){
+        return await signUp(request, reply)  
     })
 
-    fastify.post("/login", {schema : loginOpts}, async function (request, reply){
+    fastify.post("/customer/login", {schema : loginOpts}, async function (request, reply){
         return await login(fastify, request, reply)
     })
 
-    fastify.get("/getuser",
+    fastify.post("/customer/sendverificationtoken", async function (request, reply){
+      return await sendVerificationToken(fastify, request, reply);
+    })
+
+    fastify.get("/customer/verifyemail", async function (request, reply){
+      return await verifyCustomerEmail(fastify, request, reply);
+    }) 
+
+    fastify.get("/getcustomer",
       {
         preValidation: [fastify.authenticate]
       },

@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import Autoload from 'fastify-autoload';
+import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
@@ -11,8 +12,10 @@ const __dirname = dirname(__filename);
 
 const PORT = process.env.PORT || 8000;
 
+const DB_URL = process.env.MONGO_DATABASE;
+
 const fastify = Fastify({
-    logger: false
+    logger: false,
 })
 
 fastify.register(Autoload, {
@@ -23,19 +26,31 @@ fastify.register(Autoload, {
     dir: join(__dirname, "routes")
 })
 
-// const runServer = async () => {
-//     try {
-//         await fastify.listen(PORT)
-//         console.log("App running on PORT: " + PORT);
-//     } catch (err) {
-//         fastify.log.error(err)
-//         process.exit(1)
-//     }
-// }
-
-fastify.listen(PORT, '0.0.0.0', (err) => {
-    if (err) {
-      app.log.error(err)
-      process.exit(1)
+fastify.listen(PORT)
+.then(
+    (address) => {
+        mongoose.connect(DB_URL).then(
+            () => {
+                console.log("App running on: " + address)
+            }
+        )
+        .catch(
+            (err) => {
+                console.error("Error in connecting to Database: " + err)
+            })
     }
-})
+)
+.catch(
+    (error) => {
+        console.log("Error: " + error);
+    }
+)
+
+
+
+// fastify.listen(PORT, '0.0.0.0', (err) => {
+//     if (err) {
+//       app.log.error(err)
+//       process.exit(1)
+//     }
+// })
