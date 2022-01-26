@@ -25,6 +25,10 @@ const placeSchema = mongoose.Schema({
     categories : {
         type : [String],
         enum : ['venue', 'food', 'lookups', 'music/dj']
+    },
+    booked : { 
+        type: Boolean,
+        default: false
     }
 })
 
