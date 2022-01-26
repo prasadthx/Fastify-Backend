@@ -42,7 +42,7 @@ export default async function placeRoutes ( fastify, opts ){
         return await getPlacesWithin( request, reply);
     })
 
-    fastify.post( '/uploadphotos/:id', 
+    fastify.post( '/uploadphotos/:place_id', 
         {
             preHandler: fastify.multer.parser.array('upload'),
             preValidation: [fastify.authenticate]
@@ -51,7 +51,7 @@ export default async function placeRoutes ( fastify, opts ){
             return await uploadPhotos( request, reply);
     })
 
-    fastify.get( '/getphotos/:id', 
+    fastify.get( '/getphotos/:place_id', 
         {
             preValidation: [fastify.authenticate]
         },
