@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 
 const placeSchema = mongoose.Schema({
-    name : String,
+    name : { 
+        type: String,
+        required: true
+    },
     location : {
         type : Object,
         required : true

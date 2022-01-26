@@ -1,10 +1,12 @@
 import {createPlace, updatePlace, deletePlace, getPlace, getPlacesWithin, uploadPhotos, getPhotos,getPlacesByVendor} from '../../controllers/PlacesController'
+import { createPlaceOpts, updatePlaceOpts, getNearPlaceOpts } from '../../route_schemas/PlaceRouteSchemas';
 
 export default async function placeRoutes ( fastify, opts ){
     
     fastify.post( '/createplace',
         {
-            preValidation: [fastify.authenticate]
+            preValidation: [fastify.authenticate],
+            schema:createPlaceOpts
         },
         async function (request, reply){
             return await createPlace( request, reply);
@@ -12,7 +14,8 @@ export default async function placeRoutes ( fastify, opts ){
 
     fastify.put( '/updateplace/:place_id',
         {
-            preValidation: [fastify.authenticate]
+            preValidation: [fastify.authenticate],
+            schema:updatePlaceOpts
         },
         async function (request, reply){
             return await updatePlace( request, reply);
@@ -38,7 +41,7 @@ export default async function placeRoutes ( fastify, opts ){
             return await getPlacesByVendor( request, reply);
     })
 
-    fastify.get( '/placeswithin/:sorted', async function (request, reply){
+    fastify.get( '/placeswithin/:sorted', {schema:getNearPlaceOpts},async function (request, reply){
         return await getPlacesWithin( request, reply);
     })
 

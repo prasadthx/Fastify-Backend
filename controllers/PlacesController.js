@@ -25,9 +25,9 @@ export const updatePlace = async (req, res) => {
         return res.status(400).send({ error: "Not authorized" });
     }
     let {name, categories, location} = req.body ;
-    place.name = name;
-    place.categories = categories;
-    place.location = location;
+    place.name = name || place.name;
+    place.categories = categories || place.categories;
+    place.location = location || place.location;
     await place.save();
     return res.code(201).send({success : "Place updated successfully"});
 }
