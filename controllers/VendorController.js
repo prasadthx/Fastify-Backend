@@ -12,10 +12,10 @@ export const signUp = async (req, res) => {
 
         let { password: pass, ...data } = vendor;
 
-        res.send({ data: { data } })
+        return res.send({ data: { data } })
     }
     catch (error) {
-        res.status(400).send({ error: `${error}` })
+        return res.status(400).send({ error: `${error}` })
     }
 }
 
@@ -43,7 +43,7 @@ export const login = async (fastify, req, res) => {
             data: { user: data, accessToken: fastify.jwt.sign({data}) },
         })
       } catch (error) {
-        res.status(500).send({ error: `${error}` })
+        return res.status(500).send({ error: `${error}` })
       }
 }
 
@@ -70,7 +70,7 @@ export const verifyVendorEmail = async (fastify, req, res) => {
     }
     vendor.verified = true;
     await vendor.save();
-    res.code(200).send({success : "Email Verified"});
+    return res.code(200).send({success : "Email Verified"});
 }
 
 export const uploadProfilePhoto = async (req, res) => {
@@ -86,7 +86,7 @@ export const uploadProfilePhoto = async (req, res) => {
   const data = await image.save();
   vendor.photo = data;
   await vendor.save();
-  res.code(200).send({success : "Photo uploaded"});
+  return res.code(200).send({success : "Photo uploaded"});
 }
 
 const hashPassword = async (password) => {

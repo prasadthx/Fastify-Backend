@@ -5,9 +5,11 @@ import Image from '../models/Image';
 export const createPlace = async (req, res) => {
     let vendor = req.user;
     vendor = await Vendor.findOne({email : vendor.data.email});
+    if(!vendor){
+        return res.status(400).send({ error: "Invalid Token" });
+    }
     let {name, categories, location} = req.body; 
-    const place = new Place({name, categories, location});
-    place.vendor = vendor;
+    const place = new Place({name, categories, location, vendor});
     await place.save();
     return res.code(201).send({place});
 }
@@ -15,9 +17,12 @@ export const createPlace = async (req, res) => {
 export const updatePlace = async (req, res) => {
     let vendor = req.user;
     vendor = await Vendor.findOne({email : vendor.data.email});
-    let place = await Place.findOne({_id : req.params.id}).populate("vendor");
+    if(!vendor){
+        return res.status(400).send({ error: "Invalid Token" });
+    }
+    let place = await Place.findOne({_id : req.params.place_id}).populate("vendor");
     if(!place || place.vendor.email !== vendor.email) {
-        res.status(400).send({ error: "Not authorized" });
+        return res.status(400).send({ error: "Not authorized" });
     }
     let {name, categories, location} = req.body ;
     place.name = name;
@@ -30,22 +35,31 @@ export const updatePlace = async (req, res) => {
 export const deletePlace = async (req, res) => {
     let vendor = req.user;
     vendor = await Vendor.findOne({email : vendor.data.email});
-    let place = await Place.findOne({_id : req.params.id}).populate("vendor");
+    if(!vendor){
+        return res.status(400).send({ error: "Invalid Token" });
+    }
+    let place = await Place.findOne({_id : req.params.place_id}).populate("vendor");
     if(!place || place.vendor.email !== vendor.email) {
         res.status(400).send({ error: "Not authorized" });
     }
     await place.delete();
-    return res.code(201).send({success : "Place deleted successfully"});
+    return res.code(200).send({success : "Place deleted successfully"});
 }
 
 export const getPlace = async (req, res) => {
-    let place = await Place.findOne({_id : req.params.id});
+    let place = await Place.findOne({_id : req.params.place_id});
+    if(!place){
+        return res.status(400).send({ error: "Invalid Place ID" });
+    }
     return res.code(201).send({place});
 }
 
 export const getPlacesByVendor = async (req, res) => {
     let vendor = req.user;
     vendor = await Vendor.findOne({email : vendor.data.email});
+    if(!vendor){
+        return res.status(400).send({ error: "Invalid Token" });
+    }
     let places = await Place.find({vendor : vendor._id});
     return res.code(200).send({places : places});
 }
@@ -57,7 +71,7 @@ export const getPlacesWithin = async (req, res) => {
     const radius = parseFloat(req.query.radius);
 
     if(!longitude || !latitude || !radius){
-        res.status(400).send({ error: "Inadequate information" });
+        return res.status(400).send({ error: "Inadequate information" });
     }
 
     const unSortedOptions = {
@@ -93,7 +107,7 @@ export const uploadPhotos = async (req, res) => {
     }
     let place = await Place.findOne({_id : req.params.place_id}).populate("vendor");
     if(!place || place.vendor.email !== vendor.email) {
-        res.status(400).send({ error: "Not authorized" });
+        return res.status(400).send({ error: "Not authorized" });
     }
     let images = [];
     for (let file of req.files){
@@ -107,18 +121,18 @@ export const uploadPhotos = async (req, res) => {
     }
     place.photos = images;
     place.save();
-    res.code(200).send({success : "Photos uploaded"});
+    return res.code(200).send({success : "Photos uploaded"});
 }
 
 export const getPhotos = async (req, res) => {
     const place = await Place.findOne({_id : req.params.place_id}).populate("vendor")
     if(!place) {
-        res.status(400).send({ error: "Invalid Place" });
+        return res.status(400).send({ error: "Invalid PlaceID" });
     }
     let photos = [];
     for(let photo of place.photos) {
         let image = await Image.findOne({_id:photo})
         photos.push(image);
     }
-    res.code(200).send({photos});
+    return res.code(200).send({photos});
 }

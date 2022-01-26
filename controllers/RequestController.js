@@ -6,17 +6,17 @@ import Vendor from '../models/Vendor';
 export const requestPlace = async (req, res) => {
     let { place_id, requested_for } = req.body;
     if (!place_id) {
-        res.status(400).send({ error: 'Place ID is required' });
+        return res.status(400).send({ error: 'Place ID is required' });
     }
 
     let place = await Place.findOne({_id : place_id})
     if(!place) {
-        res.status(400).send({ error: "Invalid Place ID" });
+        return res.status(400).send({ error: "Invalid Place ID" });
     }
     
     const customer = await Customer.findOne({ email: req.user.data.email });
     if (!customer) {
-        res.status(400).send({ error: 'Invalid Token' });
+        return res.status(400).send({ error: 'Invalid Token' });
     }
 
     let request = new Request({

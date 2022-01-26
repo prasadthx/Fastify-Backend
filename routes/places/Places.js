@@ -10,7 +10,7 @@ export default async function placeRoutes ( fastify, opts ){
             return await createPlace( request, reply);
     })
 
-    fastify.put( '/updateplace/:id',
+    fastify.put( '/updateplace/:place_id',
         {
             preValidation: [fastify.authenticate]
         },
@@ -18,7 +18,7 @@ export default async function placeRoutes ( fastify, opts ){
             return await updatePlace( request, reply);
     })
 
-    fastify.delete( '/deleteplace/:id',
+    fastify.delete( '/deleteplace/:place_id',
         {
             preValidation: [fastify.authenticate]
         },
@@ -26,7 +26,7 @@ export default async function placeRoutes ( fastify, opts ){
             return await deletePlace( request, reply);
     })
 
-    fastify.get('/getplace/:id', async function (request, reply){
+    fastify.get('/getplace/:place_id', async function (request, reply){
         return await getPlace( request, reply);
     })
 
