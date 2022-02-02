@@ -1,7 +1,8 @@
 import { compare, genSaltSync, hash } from 'bcrypt'
 import Customer from '../models/Customer';
+import sendEmail from '../config/smtp';
 
-export const signUp = async (req, res) => {
+export const signUp = async (fastify, req, res) => {
     try {
         let { name, email, password } = req.body;
         password = await hashPassword(password)
@@ -9,9 +10,11 @@ export const signUp = async (req, res) => {
         const customer = new Customer({name, email, password});
         await customer.save();
 
-        let { password: pass, ...data } = customer;
+        name = name || 'User';
 
-        return res.send({ data: { data } })
+        let token = await fastify.jwt.sign({email});
+
+        return sendEmail(email, name, token, 'customer', res)
     }
     catch (error) {
         return res.status(400).send({ error: `${error}` })
@@ -55,7 +58,11 @@ export const sendVerificationToken = async (fastify, req, res) => {
   if(!customer) {
     return res.status(401).send({ error: 'Invalid Token' })
   }
-  return res.send({accessToken: fastify.jwt.sign({email})});
+  
+  let name = customer.name;
+
+  let token = await fastify.jwt.sign({email});
+  return sendEmail(email, name, token, 'customer', res);
 }
 
 export const verifyCustomerEmail = async (fastify, req, res) => {

@@ -30,7 +30,7 @@ const loginOpts = {
 export default async function authRoutes ( fastify, opts ){
 
     fastify.post("/vendor/signup", {schema : signUpOpts}, async function (request, reply){
-        return await signUp(request, reply)  
+        return await signUp(fastify, request, reply)  
     })
 
     fastify.post("/vendor/login", {schema : loginOpts}, async function (request, reply){

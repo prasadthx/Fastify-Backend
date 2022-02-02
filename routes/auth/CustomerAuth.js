@@ -1,4 +1,4 @@
-import { signUp, login, verifyCustomerEmail } from '../../controllers/CustomerController'
+import { signUp, login, verifyCustomerEmail, sendVerificationToken } from '../../controllers/CustomerController'
 
 const signUpSchema = {
   type: 'object',
@@ -30,7 +30,7 @@ const loginOpts = {
 export default async function authRoutes ( fastify, opts ){
 
     fastify.post("/customer/signup", {schema : signUpOpts}, async function (request, reply){
-        return await signUp(request, reply)  
+        return await signUp(fastify, request, reply)  
     })
 
     fastify.post("/customer/login", {schema : loginOpts}, async function (request, reply){
