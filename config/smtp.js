@@ -70,6 +70,10 @@ const getHTML = (link) => {
     
     <style>
       
+      p{
+          text-align: center;
+      }
+
       button{
           background-color: linen;
           align:center;
@@ -100,7 +104,7 @@ const getHTML = (link) => {
     <p>We're excited to have you get started. First, you need to confirm your account. Just press the button below.</p>
     
     <div id="button-div">
-        <a href="${link}" target="_blank" id="button-link"><button>Confirm Account</button></a>
+        <a href="${link}" target="_blank" style="margin:auto"><button>Confirm Account</button></a>
     </div>
     
     <p>If that doesn't work, click or copy and paste the following 
