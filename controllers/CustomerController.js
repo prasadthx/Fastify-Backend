@@ -14,7 +14,7 @@ export const signUp = async (fastify, req, res) => {
 
         let token = await fastify.jwt.sign({email});
 
-        return sendEmail(email, name, token, 'customer', res)
+        return await sendEmail(email, name, token, 'customer', res)
     }
     catch (error) {
         return res.status(400).send({ error: `${error}` })
@@ -62,7 +62,7 @@ export const sendVerificationToken = async (fastify, req, res) => {
   let name = customer.name;
 
   let token = await fastify.jwt.sign({email});
-  return sendEmail(email, name, token, 'customer', res);
+  return await sendEmail(email, name, token, 'customer', res);
 }
 
 export const verifyCustomerEmail = async (fastify, req, res) => {

@@ -1,15 +1,18 @@
-import pkg from 'sib-api-v3-sdk';
-const {ApiClient, TransactionalEmailsApi, SendSmtpEmail} = pkg;
+// import pkg from 'sib-api-v3-sdk';
+// const {ApiClient, TransactionalEmailsApi, SendSmtpEmail} = pkg;
+import sgMail from "@sendgrid/mail";
 
-let defaultClient = ApiClient.instance;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-let apiKey = defaultClient.authentications["api-key"];
+// let defaultClient = ApiClient.instance;
 
-apiKey.apiKey = `${process.env.SEND_IN_BLUE_API_KEY}`
+// let apiKey = defaultClient.authentications["api-key"];
 
-const sendEmail = (email, name, token, role, res) => {
-    let apiInstance = new TransactionalEmailsApi();
-    let sendSmtpEmail = new SendSmtpEmail();
+// apiKey.apiKey = `${process.env.SEND_IN_BLUE_API_KEY}`
+
+const sendEmail = async(email, name, token, role, res) => {
+    // let apiInstance = new TransactionalEmailsApi();
+    // let sendSmtpEmail = new SendSmtpEmail();
 
     let link = "";
     if(role === "customer"){
@@ -19,25 +22,41 @@ const sendEmail = (email, name, token, role, res) => {
         link = `http://ec2-44-197-206-160.compute-1.amazonaws.com:3000/auth/vendor/verifyemail?verify=${token}`
     }
     
-    sendSmtpEmail = {
-        sender : { email : 'xtest.smtp@gmail.com'},
-        to : [
-            {
-                email,
-                name,
-            }
-        ],
-        subject : "Account Verification",
-        htmlContent : getHTML(link)
+    // sendSmtpEmail = {
+    //     sender : { email : 'xtest.smtp@gmail.com'},
+    //     to : [
+    //         {
+    //             email,
+    //             name,
+    //         }
+    //     ],
+    //     subject : "Account Verification",
+    //     htmlContent : getHTML(link)
+    // }
+
+    const msg = {
+        to: email, // Change to your recipient
+        from: 'xtest.smtp@gmail.com', // Change to your verified sender
+        subject: 'Account Verification',
+        html: getHTML(link),
     }
 
-    return apiInstance.sendTransacEmail(sendSmtpEmail).then(
-        (data) => {
-            return res.code(201).send("Email sent successfully");
-        }).catch(err => {
-            console.log(err);
-            return res.code(400).send("Error sending email");
-        })
+    // return apiInstance.sendTransacEmail(sendSmtpEmail).then(
+    //     (data) => {
+    //         return res.code(201).send("Email sent successfully");
+    //     }).catch(err => {
+    //         console.log(err);
+    //         return res.code(400).send("Error sending email");
+    //     })
+
+    return sgMail.send(msg)
+    .then(() => {
+      res.code(200).send('Email sent');
+    })
+    .catch((error) => {
+      console.error(error)
+      res.code(400).send('Error sending email');
+    })
 }
 
 export default sendEmail;
