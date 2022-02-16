@@ -39,10 +39,10 @@ export const login = async (fastify, req, res) => {
           return res.status(401).send({ error: 'Invalid password' })
         }
     
-        let { password: pass, ...data } = customer;
+        let { password: pass1, _id: pass2, __v: pass3, ...user } = {id:customer._doc._id, ...customer._doc};
 
         return res.send({
-            data: { user: data, accessToken: fastify.jwt.sign({data}) },
+            data: { customer : user, accessToken: fastify.jwt.sign({user})},
         })
       } catch (error) {
         return res.status(500).send({ error: `${error}` })
