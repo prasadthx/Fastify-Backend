@@ -1,7 +1,6 @@
 'use strict'
 
 import fp from "fastify-plugin";
-import fastifyMultipart from "fastify-multipart";
 import multer from "fastify-multer";
 
 

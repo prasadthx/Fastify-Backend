@@ -4,13 +4,14 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
+import startDashboard from './admin';
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
 const DB_URL = process.env.MONGO_DATABASE;
 
@@ -31,7 +32,8 @@ fastify.listen(PORT,'0.0.0.0')
     (address) => {
         mongoose.connect(DB_URL).then(
             () => {
-                console.log("App running on: " + address)
+                console.log("App running on: " + address);
+                startDashboard()
             }
         )
         .catch(
