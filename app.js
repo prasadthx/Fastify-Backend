@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
-import startDashboard from './output/admin';
+import startDashboard from './admin/admin';
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ fastify.listen(PORT,'0.0.0.0')
         mongoose.connect(DB_URL).then(
             () => {
                 console.log("App running on: " + address);
-                //startDashboard()
+                startDashboard();
             }
         )
         .catch(
