@@ -13,7 +13,18 @@ const transactionSchema = mongoose.Schema({
     },
     time : { 
         type: Date,
-        default : Date.now()
+    },
+    order_id : { 
+        type : String,
+    },
+    payment_id : { 
+        type : String,
+    },
+    status : { 
+        type : String,
+    },
+    amount : { 
+        type : Number,
     }
 })
 

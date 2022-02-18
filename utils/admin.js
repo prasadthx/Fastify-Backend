@@ -2,12 +2,15 @@ import Fastify from 'fastify';
 import AdminJSFastify from '@adminjs/fastify';
 import AdminJS from 'adminjs';
 import AdminJSMongoose from '@adminjs/mongoose';
-import Customer from './models/Customer';
-import Vendor from './models/Vendor';
-import Image from './models/Image';
-import Place from './models/Place';
-import Transaction from './models/Transaction';
-import Request from './models/Request';
+import Customer from '../models/Customer';
+import Vendor from '../models/Vendor';
+import Image from '../models/Image';
+import Place from '../models/Place';
+import Transaction from '../models/Transaction';
+import Request from '../models/Request';
+import pkg from 'fastify-session';
+const {sessionStore} = pkg;
+import replace from '@rollup/plugin-replace';
 
 AdminJS.registerAdapter(AdminJSMongoose);
 
@@ -17,10 +20,29 @@ const app = Fastify({
     logger: false,
 })
 
+// app.decorateRequest('sessionStore', { getter: () => sessionStore });
+
 const AdminJSOpts = new AdminJS({
     databases: [],
     rootPath: '/admin',
-    resources: [Customer, Vendor, Transaction, Place, Image, Request]
+    resources: [Customer, Vendor, Transaction, Place, Image, Request],
+    branding: {
+        companyName: 'Alecado Systems',
+        softwareBrothers : false
+    },
+    bundler: {
+        rollup(config, opts) {
+            config.plugins = config.plugins.map(p =>
+              p.name === 'replace'
+                ? replace({
+                    'process.env.NODE_ENV': JSON.stringify(opts.env),
+                    preventAssignment: true,
+                  })
+                : p
+            );
+            return config; // always return a config.
+        }
+    }
 })
 
 const ADMIN = {

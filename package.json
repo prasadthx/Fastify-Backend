@@ -38,6 +38,10 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^2.0.15",
     "pino-pretty": "^7.3.0",
+    "razorpay": "^2.8.0",
     "sib-api-v3-sdk": "^8.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^2.4.2"
   }
 }
