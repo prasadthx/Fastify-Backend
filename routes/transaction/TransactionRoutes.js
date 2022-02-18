@@ -1,5 +1,5 @@
 import { createTransaction, getTransactionsByCustomer, getTransactionsByPlace, verifyTransaction } from "../../controllers/TransactionController";
-import { newTransactionOpts } from "../../route_schemas/TransactionRouteSchemas";
+import { getTransactionsSchema, newTransactionOpts } from "../../route_schemas/TransactionRouteSchemas";
 
 
 export default async function requestRoutes ( fastify, opts ){
@@ -22,7 +22,7 @@ export default async function requestRoutes ( fastify, opts ){
     fastify.get( '/gettransactionsbycustomer',
         {
             preValidation: [fastify.authenticate],
-            schema:newTransactionOpts
+            schema: getTransactionsSchema
         },
         async function (request, reply){
             return await getTransactionsByCustomer( request, reply);
@@ -32,7 +32,7 @@ export default async function requestRoutes ( fastify, opts ){
     fastify.post( '/gettransactionsbyplace/:place_id',
         {
             preValidation: [fastify.authenticate],
-            schema:newTransactionOpts
+            schema: getTransactionsSchema
         },
         async function (request, reply){
             return await getTransactionsByPlace( request, reply);
