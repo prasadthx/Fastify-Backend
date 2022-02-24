@@ -4,6 +4,9 @@ import Image from '../models/Image';
 import sendEmail from '../config/smtp';
 import RazorpayInstance from '../utils/payment';
 import * as crypto from 'crypto';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const signUp = async (fastify, req, res) => {
     try {
@@ -98,7 +101,7 @@ export const uploadProfilePhoto = async (req, res) => {
   return res.code(200).send({success : "Photo uploaded"});
 }
 
-export const createSubsciption = async (req, res) => {
+export const createSubscription = async (req, res) => {
   const vendor = await Vendor.findOne({ email: req.user.user.email });
   
   if(!vendor) {

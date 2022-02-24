@@ -1,4 +1,5 @@
-import { signUp, login, sendVerificationToken,verifyVendorEmail, uploadProfilePhoto } from '../../controllers/VendorController'
+import { signUp, login, sendVerificationToken,verifyVendorEmail, uploadProfilePhoto, createSubscription, verifyPayment } from '../../controllers/VendorController'
+import { createSubscriptionSchema, verifyPaymentSchema } from '../../route_schemas/VendorAuthSchemas';
 
 const signUpSchema = {
   type: 'object',
@@ -52,7 +53,25 @@ export default async function authRoutes ( fastify, opts ){
     }, 
     async function (request, reply){
         return await uploadProfilePhoto(request, reply);
-    }) 
+    })
+    
+    fastify.post("/vendor/createsubscription",
+    {
+      preValidation: [fastify.authenticate],
+      schema : createSubscriptionSchema
+    }, 
+    async function (request, reply){
+        return await createSubscription(request, reply);
+    })
+
+    fastify.post("/vendor/verifypayment",
+    {
+      preValidation: [fastify.authenticate],
+      schema : verifyPaymentSchema
+    }, 
+    async function (request, reply){
+        return await verifyPayment(request, reply);
+    })
 
     fastify.get("/getvendor",
       {
