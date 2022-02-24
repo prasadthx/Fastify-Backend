@@ -59,7 +59,7 @@ export default async function authRoutes ( fastify, opts ){
         preValidation: [fastify.authenticate]
       },
       async function(request, reply) {
-        return request.user.data;
+        return request.user.user;
       }
     )
 }

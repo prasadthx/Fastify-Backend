@@ -101,7 +101,7 @@ export const getPlacesWithin = async (req, res) => {
 }
 
 export const uploadPhotos = async (req, res) => {
-    const vendor = await Vendor.findOne({ email: req.user.data.email });
+    const vendor = await Vendor.findOne({ email: req.user.user.email });
     if(!vendor) {
         return res.status(401).send({ error: 'Invalid Token' })
     }

@@ -5,7 +5,7 @@ import RazorpayInstance from '../utils/payment';
 import Razorpay from 'razorpay'
 
 export const createTransaction = async (req, res) => {
-    const customer = await Customer.findOne({ email: req.user.data.email });
+    const customer = await Customer.findOne({ email: req.user.user.email });
     if (!customer) {
         return res.status(400).send({ error: 'Invalid Token' });
     }
@@ -82,7 +82,7 @@ export const verifyTransaction = async (req, res) => {
 }
 
 export const getTransactionsByCustomer = async (req, res) => {
-    const customer = await Customer.findOne({ email: req.user.data.email });
+    const customer = await Customer.findOne({ email: req.user.user.email });
 
     if (!customer) {
         return res.status(400).send({ error: 'Invalid Token' });

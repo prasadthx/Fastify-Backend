@@ -1,7 +1,9 @@
-import { compare, genSaltSync, hash } from 'bcrypt'
+import { compare, genSaltSync, hash } from 'bcrypt';
 import Vendor from '../models/Vendor';
 import Image from '../models/Image';
 import sendEmail from '../config/smtp';
+import RazorpayInstance from '../utils/payment';
+import * as crypto from 'crypto';
 
 export const signUp = async (fastify, req, res) => {
     try {
@@ -81,7 +83,7 @@ export const verifyVendorEmail = async (fastify, req, res) => {
 }
 
 export const uploadProfilePhoto = async (req, res) => {
-  const vendor = await Vendor.findOne({ email: req.user.data.email });
+  const vendor = await Vendor.findOne({ email: req.user.user.email });
   if(!vendor) {
     return res.status(401).send({ error: 'Invalid Token' })
   }
@@ -94,6 +96,83 @@ export const uploadProfilePhoto = async (req, res) => {
   vendor.photo = data;
   await vendor.save();
   return res.code(200).send({success : "Photo uploaded"});
+}
+
+export const createSubsciption = async (req, res) => {
+  const vendor = await Vendor.findOne({ email: req.user.user.email });
+  
+  if(!vendor) {
+    return res.status(401).send({ error: 'Invalid Token' })
+  }
+  
+  let {amount, currency} = req.body;
+
+  if (!amount || !currency) {
+    return res.status(400).send({ error: 'Amount and currency must be provided' });
+  }
+
+  if(amount !== 699 && amount !== 999){
+    amount = 999;
+  }
+
+  let options = {
+    amount: amount * 100,  
+    currency: currency,
+    receipt: `receipt_id_${vendor._id}`
+  };
+
+  try{
+    const response = await RazorpayInstance.orders.create(options);
+
+    vendor.subscription.order_id = response.id;
+
+    await transaction.save();
+    
+    return res.status(200).send({
+        order_id : response.id,
+        currency : response.currency,
+        amount : response.amount
+    });
+  }
+  catch(err){
+      return res.status(400).send({error: err});
+  }
+}
+
+export const verifyPayment = async (req, res) => {
+  const vendor = await Vendor.findOne({ email: req.user.user.email });
+  
+  if(!vendor) {
+    return res.status(401).send({ error: 'Invalid Token' })
+  }
+
+  const order_id = vendor.subscription.order_id;
+
+  const RAZORPAY_SECRET = process.env.RAZORPAY_SECRET;
+
+  const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+  let body = order_id + "|" + razorpay_payment_id;
+
+  if(!razorpay_order_id && !razorpay_payment_id && !razorpay_signature) {
+    return res.status(401).send({ error: 'Insufficient Data' });
+  }
+  
+  let expectedSignature = crypto.createHmac('sha256', RAZORPAY_SECRET)
+                                .update(body.toString())
+                                .digest('hex');
+
+  if(expectedSignature === req.body.response.razorpay_signature){
+      const payment = await instance.payments.fetch(razorpay_payment_id);
+      if(payment.status === 'captured'){
+        vendor.isSubscribed = true;
+        vendor.subscription.time = Date.now();
+        vendor.subscription.payment_id = razorpay_payment_id;
+        res.code(200).send({Success: 'Vendor subscribed successfully'});
+      }
+  }
+  else{
+    res.code(400).send({Error: 'Invalid Signature'});
+  }                                
 }
 
 const hashPassword = async (password) => {

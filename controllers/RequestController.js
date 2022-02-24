@@ -14,7 +14,7 @@ export const requestPlace = async (req, res) => {
         return res.status(400).send({ error: "Invalid Place ID" });
     }
     
-    const customer = await Customer.findOne({ email: req.user.data.email });
+    const customer = await Customer.findOne({ email: req.user.user.email });
     if (!customer) {
         return res.status(400).send({ error: 'Invalid Token' });
     }
@@ -33,8 +33,8 @@ export const requestPlace = async (req, res) => {
 
 export const deleteRequest = async (req, res) => {
     let request_id = req.params.request_id;
-    const vendor = await Vendor.findOne({ email: req.user.data.email });
-    const customer = await Customer.findOne({ email: req.user.data.email });
+    const vendor = await Vendor.findOne({ email: req.user.user.email });
+    const customer = await Customer.findOne({ email: req.user.user.email });
     let request = await Request.findOne({_id : request_id});
     let place = await Place.findOne({_id : request.place}).populate("vendor");
 

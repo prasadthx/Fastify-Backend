@@ -29,7 +29,21 @@ export const vendorSchema = mongoose.Schema({
         ref: 'Image'
     },
     verified : Boolean,
-    phoneNumber : String
+    phoneNumber : String,
+    isSubscribed : { 
+        type : Boolean,
+        default: false
+    },
+    subscription : {
+        order_id : String,
+        payment_id : String,
+        subscriptionType: {
+            type : String,
+        },
+        time : {
+            type : Date
+        }
+    }
 })
 
 export default mongoose.model("Vendor", vendorSchema);
