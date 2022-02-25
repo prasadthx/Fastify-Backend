@@ -4,8 +4,17 @@ const createPlaceSchema = {
     properties: {
       name: { type: 'string' },
       location: { 
-          type: 'string' 
-        },
+          type: 'object',
+          required: ['coordinates', 'type'],
+          properties: {
+            'type' : {type: 'string'},
+            coordinates: { 
+              type: 'array',
+              maxItems: 2,
+              items: { type: 'number' }
+           }, 
+          }
+      },
       categories: { 
         type: 'array',
         maxItems: 4,
@@ -22,8 +31,17 @@ const updatePlaceSchema = {
     properties: {
       name: { type: 'string' },
       location: { 
-          type: 'string' 
-        },
+        type: 'object',
+        required: ['coordinates', 'type'],
+        properties: {
+          'type' : {type: 'string'},
+          coordinates: { 
+            type: 'array',
+            maxItems: 2,
+            items: { type: 'number' }
+         }, 
+        }
+      },
       categories: { 
         type: 'array',
         maxItems: 4,
