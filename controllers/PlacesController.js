@@ -4,7 +4,8 @@ import Image from '../models/Image';
 
 export const createPlace = async (req, res) => {
     let vendor = req.user.user;
-    vendor = await Vendor.findOne({email : vendor.data.email});
+    console.log(vendor);
+    vendor = await Vendor.findOne({email : vendor.email});
     if(!vendor){
         return res.status(400).send({ error: "Invalid Token" });
     }
@@ -16,7 +17,7 @@ export const createPlace = async (req, res) => {
 
 export const updatePlace = async (req, res) => {
     let vendor = req.user.user;
-    vendor = await Vendor.findOne({email : vendor.data.email});
+    vendor = await Vendor.findOne({email : vendor.email});
     if(!vendor){
         return res.status(400).send({ error: "Invalid Token" });
     }
@@ -34,7 +35,7 @@ export const updatePlace = async (req, res) => {
 
 export const deletePlace = async (req, res) => {
     let vendor = req.user.user;
-    vendor = await Vendor.findOne({email : vendor.data.email});
+    vendor = await Vendor.findOne({email : vendor.email});
     if(!vendor){
         return res.status(400).send({ error: "Invalid Token" });
     }
@@ -56,7 +57,7 @@ export const getPlace = async (req, res) => {
 
 export const getPlacesByVendor = async (req, res) => {
     let vendor = req.user.user;
-    vendor = await Vendor.findOne({email : vendor.data.email});
+    vendor = await Vendor.findOne({email : vendor.email});
     if(!vendor){
         return res.status(400).send({ error: "Invalid Token" });
     }
