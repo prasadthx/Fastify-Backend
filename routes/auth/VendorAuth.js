@@ -1,4 +1,4 @@
-import { signUp, login, sendVerificationToken,verifyVendorEmail, uploadProfilePhoto, createSubscription, verifyPayment } from '../../controllers/VendorController'
+import { signUp, login, sendVerificationToken,verifyVendorEmail, uploadProfilePhoto, createSubscription, verifyPayment, changeVendorStatus } from '../../controllers/VendorController'
 import { createSubscriptionSchema, verifyPaymentSchema } from '../../route_schemas/VendorAuthSchemas';
 
 const signUpSchema = {
@@ -79,6 +79,15 @@ export default async function authRoutes ( fastify, opts ){
       },
       async function(request, reply) {
         return request.user.user;
+      }
+    )
+
+    fastify.get("/changevendorstatus",
+      {
+        preValidation: [fastify.authenticate]
+      },
+      async function(request, reply) {
+        return await changeVendorStatus(request, reply);
       }
     )
 }

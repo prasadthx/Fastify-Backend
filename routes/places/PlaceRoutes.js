@@ -5,7 +5,7 @@ export default async function placeRoutes ( fastify, opts ){
     
     fastify.post( '/createplace',
         {
-            preValidation: [fastify.authenticate],
+            preValidation: [fastify.authenticate, fastify.authorize_vendor],
             schema:createPlaceOpts
         },
         async function (request, reply){
@@ -14,7 +14,7 @@ export default async function placeRoutes ( fastify, opts ){
 
     fastify.put( '/updateplace/:place_id',
         {
-            preValidation: [fastify.authenticate],
+            preValidation: [fastify.authenticate, fastify.authorize_vendor],
             schema:updatePlaceOpts
         },
         async function (request, reply){
@@ -23,7 +23,7 @@ export default async function placeRoutes ( fastify, opts ){
 
     fastify.delete( '/deleteplace/:place_id',
         {
-            preValidation: [fastify.authenticate]
+            preValidation: [fastify.authenticate, fastify.authorize_vendor]
         },
         async function (request, reply){
             return await deletePlace( request, reply);
@@ -35,7 +35,7 @@ export default async function placeRoutes ( fastify, opts ){
 
     fastify.get( '/getplacesbyvendor',
         {
-            preValidation: [fastify.authenticate]
+            preValidation: [fastify.authenticate, fastify.authorize_vendor]
         },
         async function (request, reply){
             return await getPlacesByVendor( request, reply);
@@ -48,7 +48,7 @@ export default async function placeRoutes ( fastify, opts ){
     fastify.post( '/uploadphotos/:place_id', 
         {
             preHandler: fastify.multer.parser.array('upload'),
-            preValidation: [fastify.authenticate]
+            preValidation: [fastify.authenticate, fastify.authorize_vendor]
         },
         async function (request, reply){
             return await uploadPhotos( request, reply);

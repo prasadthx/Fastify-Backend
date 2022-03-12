@@ -170,12 +170,23 @@ export const verifyPayment = async (req, res) => {
         vendor.isSubscribed = true;
         vendor.subscription.time = Date.now();
         vendor.subscription.payment_id = razorpay_payment_id;
+        await vendor.save();
         res.code(200).send({Success: 'Vendor subscribed successfully'});
       }
   }
   else{
     res.code(400).send({Error: 'Invalid Signature'});
   }                                
+}
+
+export const changeVendorStatus = async (req, res) => {
+  const vendor = await Vendor.findOne({ email: req.user.user.email });
+  if(!vendor) {
+    return res.status(401).send({ error: 'Invalid Token' })
+  }
+  vendor.isSubscribed = true;
+  await vendor.save();
+  res.code(200).send({Success: 'Vendor subscribed successfully'});
 }
 
 const hashPassword = async (password) => {
