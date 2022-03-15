@@ -129,7 +129,7 @@ export const createSubscription = async (req, res) => {
 
     vendor.subscription.order_id = response.id;
 
-    await transaction.save();
+    await vendor.save();
     
     return res.status(200).send({
         order_id : response.id,
