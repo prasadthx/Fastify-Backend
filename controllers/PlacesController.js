@@ -9,8 +9,8 @@ export const createPlace = async (req, res) => {
     if(!vendor){
         return res.status(400).send({ error: "Invalid Token" });
     }
-    let {name, categories, location} = req.body; 
-    const place = new Place({name, categories, location, vendor});
+    let {name, categories, location, price, description} = req.body; 
+    const place = new Place({name, categories, location, vendor, price, description});
     await place.save();
     return res.code(201).send({place});
 }
@@ -25,10 +25,12 @@ export const updatePlace = async (req, res) => {
     if(!place || place.vendor.email !== vendor.email) {
         return res.status(400).send({ error: "Not authorized" });
     }
-    let {name, categories, location} = req.body ;
+    let {name, categories, location, price, description} = req.body; 
     place.name = name || place.name;
     place.categories = categories || place.categories;
     place.location = location || place.location;
+    place.price = price || place.price;
+    place.description = description || place.description;
     await place.save();
     return res.code(201).send({success : "Place updated successfully"});
 }

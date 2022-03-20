@@ -29,6 +29,12 @@ const placeSchema = mongoose.Schema({
     booked : { 
         type: Boolean,
         default: false
+    },
+    description : {
+        type : String
+    },
+    price : {
+        type: Number
     }
 })
 
